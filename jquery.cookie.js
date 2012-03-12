@@ -15,24 +15,24 @@
             options = $.extend({}, options);
 
             if (value === null || value === undefined) {
-                options.expires = -1;
+                options.expires = "Thu, 01-Jan-1970 00:00:01 GMT";
+            }else if (typeof options.expires === 'number') {
+                var days = options.expires;
+                options.expires = new Date();
+                options.expires.setDate(options.expires.getDate() + days);
+    			options.expires = options.expires.toUTCString();
             }
-
-            if (typeof options.expires === 'number') {
-                var days = options.expires, t = options.expires = new Date();
-                t.setDate(t.getDate() + days);
-            }
-
+			if(typeof value === "object" ) value = $.toJSON(value);
             value = String(value);
-
             return (document.cookie = [
                 encodeURIComponent(key), '=', options.raw ? value : encodeURIComponent(value),
-                options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
-                options.path    ? '; path=' + options.path : '',
-                options.domain  ? '; domain=' + options.domain : '',
-                options.secure  ? '; secure' : ''
+                options.expires ? '; expires=' + options.expires : '', // use expires attribute, max-age is not supported by IE
+                options.path ? '; path=' + options.path : '',
+                options.domain ? '; domain=' + options.domain : '',
+                options.secure ? '; secure' : ''
             ].join(''));
         }
+
 
         // key and possibly options given, get cookie...
         options = value || {};
